@@ -1,294 +1,140 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-  <title>CodeVAR – Loading</title>
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>musicAi — Mood DJ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-<!-- Background layers -->
-<div id="bg"></div>
-<div id="pitch-lines"></div>
-<div id="center-circle"></div>
-<div id="scanlines"></div>
+<div class="app">
 
-<!-- Corner decorations -->
-<div class="corner tl"></div>
-<div class="corner tr"></div>
-<div class="corner bl"></div>
-<div class="corner br"></div>
-
-<!-- Flash overlay for start -->
-<div id="flash"></div>
-
-<div id="wrapper">
-
-  <!-- Top bar -->
-  <div id="top-bar">
-    <span class="badge">Season 2025</span>
-    <div class="top-line"></div>
-    <span class="badge">v1.0.0</span>
-  </div>
-
-  <!-- Logo -->
-  <div id="logo-block">
-    <div id="logo-eyebrow">Il videogioco del calcio</div>
-    <div id="logo-main">code<span class="var-accent">VAR</span></div>
-    <div id="logo-sub">Video Assistant Referee</div>
-  </div>
-
-  <!-- Characters + VAR monitor -->
-  <div id="stage">
-
-    <!-- FOOTBALLER -->
-    <div class="char-wrap footballer">
-      <div class="char-label">Attaccante</div>
-      <!-- Footballer SVG: blaugrana shirt -->
-      <svg class="character" width="110" height="220" viewBox="0 0 110 220" xmlns="http://www.w3.org/2000/svg">
-        <!-- Shadow/glow base -->
-        <ellipse cx="55" cy="216" rx="32" ry="6" fill="rgba(0,77,152,0.35)" />
-
-        <!-- LEGS -->
-        <!-- Left leg (far) -->
-        <rect x="38" y="148" width="16" height="50" rx="5" fill="#1a1a2e"/>
-        <!-- Right leg (near) - slightly kicked forward -->
-        <rect x="56" y="148" width="16" height="46" rx="5" fill="#222244" transform="rotate(8,64,148)"/>
-
-        <!-- Socks left -->
-        <rect x="38" y="180" width="16" height="18" rx="3" fill="#004D98"/>
-        <line x1="38" y1="184" x2="54" y2="184" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
-
-        <!-- Socks right -->
-        <rect x="57" y="178" width="16" height="16" rx="3" fill="#A50044" transform="rotate(8,65,178)"/>
-
-        <!-- Boots left -->
-        <ellipse cx="46" cy="199" rx="10" ry="5" fill="#111"/>
-        <!-- Boots right -->
-        <ellipse cx="66" cy="196" rx="10" ry="5" fill="#111" transform="rotate(8,66,196)"/>
-        <!-- Boots sole -->
-        <rect x="37" y="197" width="18" height="5" rx="2" fill="#222"/>
-        <rect x="57" y="194" width="18" height="5" rx="2" fill="#222" transform="rotate(8,66,196)"/>
-
-        <!-- SHIRT body - blaugrana stripes -->
-        <rect x="26" y="88" width="58" height="64" rx="10" fill="#004D98"/>
-        <!-- Garnet vertical stripes -->
-        <rect x="37" y="88" width="12" height="64" rx="2" fill="#A50044"/>
-        <rect x="61" y="88" width="12" height="64" rx="2" fill="#A50044"/>
-        <!-- Shirt bottom -->
-        <rect x="26" y="140" width="58" height="12" rx="5" fill="#003d7a"/>
-
-        <!-- Collar -->
-        <ellipse cx="55" cy="89" rx="12" ry="6" fill="#003d7a"/>
-        <path d="M47 87 Q55 95 63 87" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5"/>
-
-        <!-- LEFT ARM (raised/dynamic) -->
-        <rect x="10" y="90" width="18" height="42" rx="7"
-              fill="#A50044"
-              transform="rotate(-20, 19, 90)"/>
-        <!-- Left hand -->
-        <ellipse cx="8" cy="127" rx="9" ry="8" fill="#c8a882" transform="rotate(-20,8,127)"/>
-
-        <!-- RIGHT ARM (down) -->
-        <rect x="82" y="90" width="18" height="42" rx="7"
-              fill="#004D98"
-              transform="rotate(15, 91, 90)"/>
-        <!-- Right hand -->
-        <ellipse cx="102" cy="127" rx="9" ry="8" fill="#c8a882" transform="rotate(15,102,127)"/>
-
-        <!-- Number 10 on shirt -->
-        <text x="55" y="122" text-anchor="middle" font-family="Bebas Neue, sans-serif"
-              font-size="22" fill="rgba(255,255,255,.9)" letter-spacing="1">10</text>
-
-        <!-- NECK -->
-        <rect x="48" y="74" width="14" height="18" rx="6" fill="#c8a882"/>
-
-        <!-- HEAD -->
-        <ellipse cx="55" cy="62" rx="26" ry="28" fill="#c8a882"/>
-
-        <!-- Hair - dark, slightly messy on top -->
-        <ellipse cx="55" cy="38" rx="27" ry="16" fill="#1a0a00"/>
-        <path d="M28 50 Q22 30 55 30 Q88 30 82 50" fill="#1a0a00"/>
-        <!-- Hair highlight -->
-        <path d="M35 42 Q45 34 58 36" stroke="#3d1f00" stroke-width="3" fill="none" stroke-linecap="round"/>
-
-        <!-- Ear left -->
-        <ellipse cx="29" cy="64" rx="5" ry="7" fill="#bf9870"/>
-        <!-- Ear right -->
-        <ellipse cx="81" cy="64" rx="5" ry="7" fill="#bf9870"/>
-
-        <!-- Eyes -->
-        <ellipse cx="44" cy="60" rx="6" ry="7" fill="white"/>
-        <ellipse cx="66" cy="60" rx="6" ry="7" fill="white"/>
-        <ellipse cx="45" cy="61" rx="4" ry="5" fill="#3d1800"/>
-        <ellipse cx="67" cy="61" rx="4" ry="5" fill="#3d1800"/>
-        <!-- Pupil shine -->
-        <ellipse cx="46" cy="59" rx="1.5" ry="1.5" fill="white"/>
-        <ellipse cx="68" cy="59" rx="1.5" ry="1.5" fill="white"/>
-        <!-- Eyebrows -->
-        <path d="M39 53 Q44 50 50 53" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M61 53 Q67 50 72 53" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-
-        <!-- Nose -->
-        <path d="M52 66 Q55 72 58 66" stroke="#b08060" stroke-width="1.8" fill="none"/>
-
-        <!-- Smile -->
-        <path d="M46 74 Q55 81 64 74" stroke="#a06040" stroke-width="2" fill="none" stroke-linecap="round"/>
-
-        <!-- Headband (optional accessory) -->
-        <rect x="28" y="52" width="54" height="7" rx="3.5" fill="#FFD700" opacity=".85"/>
-
-        <!-- BALL at feet -->
-        <circle cx="70" cy="204" r="13" fill="white" stroke="#222" stroke-width="1.5"/>
-        <path d="M70 191 L76 196 L74 204 L66 204 L64 196 Z" fill="#222"/>
-        <path d="M70 217 L76 212 L80 206" stroke="#222" stroke-width="1.2" fill="none"/>
-        <path d="M70 217 L64 212 L60 206" stroke="#222" stroke-width="1.2" fill="none"/>
-        <path d="M83 204 L78 200 L80 206" stroke="#222" stroke-width="1.2" fill="none"/>
-        <path d="M57 204 L62 200 L60 206" stroke="#222" stroke-width="1.2" fill="none"/>
-      </svg>
-      <div class="char-glow"></div>
-      <div class="char-shadow"></div>
-    </div>
-
-    <!-- VAR MONITOR (center) -->
-    <div id="var-screen">
-      <div id="var-monitor">
-        <div id="var-icon">VAR</div>
-        <div id="var-label">Video Assistant</div>
-        <div id="var-divider"></div>
-        <div id="var-status" id="var-status">Analisi in corso…</div>
+  <!-- ═══════════ SIDEBAR ═══════════ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark">
+        <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="20" r="18" stroke="var(--blood)" stroke-width="1.5" opacity="0.4"/>
+          <circle cx="20" cy="20" r="5" fill="var(--blood)"/>
+          <path d="M20 8 L20 15" stroke="var(--blood)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M20 25 L20 32" stroke="var(--blood)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M8 20 L15 20" stroke="var(--blood)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M25 20 L32 20" stroke="var(--blood)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">music<span class="ai">Ai</span></span>
+        <span class="brand-sub">Mood DJ</span>
       </div>
     </div>
 
-    <!-- REFEREE -->
-    <div class="char-wrap referee">
-      <div class="char-label">Arbitro</div>
-      <!-- Referee SVG: black kit, whistle in mouth -->
-      <svg class="character" width="100" height="210" viewBox="0 0 100 210" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="50" cy="207" rx="28" ry="5" fill="rgba(0,0,0,0.4)"/>
+    <nav class="side-nav">
+      <button class="nav-btn active" data-view="create">
+        <svg viewBox="0 0 20 20" fill="none"><path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Crea playlist
+      </button>
+      <button class="nav-btn" data-view="library">
+        <svg viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="3" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="8.5" y="4" width="3" height="12" rx="1" stroke="currentColor" stroke-width="1.5"/><path d="M15 5l2 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Le mie playlist
+        <span class="nav-count" id="nav-count">0</span>
+      </button>
+    </nav>
 
-        <!-- LEGS -->
-        <rect x="32" y="142" width="15" height="52" rx="5" fill="#1a1a1a"/>
-        <rect x="53" y="142" width="15" height="52" rx="5" fill="#2a2a2a"/>
-
-        <!-- Socks -->
-        <rect x="32" y="176" width="15" height="18" rx="3" fill="#111"/>
-        <rect x="53" y="176" width="15" height="18" rx="3" fill="#111"/>
-
-        <!-- Boots -->
-        <ellipse cx="40" cy="197" rx="10" ry="5" fill="#0a0a0a"/>
-        <ellipse cx="61" cy="197" rx="10" ry="5" fill="#0a0a0a"/>
-        <rect x="31" y="195" width="18" height="5" rx="2" fill="#1a1a1a"/>
-        <rect x="52" y="195" width="18" height="5" rx="2" fill="#1a1a1a"/>
-
-        <!-- SHIRT body - solid black with yellow details -->
-        <rect x="20" y="84" width="60" height="62" rx="10" fill="#1a1a1a"/>
-        <!-- Yellow sponsor/badge area -->
-        <rect x="33" y="90" width="16" height="20" rx="3" fill="#F5C518" opacity=".85"/>
-        <text x="41" y="104" text-anchor="middle" font-family="Bebas Neue,sans-serif"
-              font-size="11" fill="#111">FIFA</text>
-
-        <!-- Shirt collar -->
-        <ellipse cx="50" cy="85" rx="11" ry="5" fill="#111"/>
-        <path d="M43 83 Q50 90 57 83" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="1.2"/>
-
-        <!-- Shirt bottom -->
-        <rect x="20" y="135" width="60" height="12" rx="5" fill="#111"/>
-
-        <!-- LEFT ARM raised (pointing / signaling) -->
-        <rect x="6" y="86" width="16" height="44" rx="6"
-              fill="#1a1a1a"
-              transform="rotate(-35, 14, 86)"/>
-        <ellipse cx="3" cy="118" rx="8" ry="7" fill="#c8a882" transform="rotate(-35,3,118)"/>
-        <!-- Pointing finger -->
-        <rect x="-2" y="107" width="6" height="14" rx="3" fill="#c8a882" transform="rotate(-35,1,114)"/>
-
-        <!-- RIGHT ARM (down, holding card) -->
-        <rect x="78" y="86" width="16" height="44" rx="6"
-              fill="#1a1a1a"
-              transform="rotate(10, 86, 86)"/>
-        <ellipse cx="91" cy="128" rx="8" ry="7" fill="#c8a882" transform="rotate(10,91,128)"/>
-        <!-- Yellow card -->
-        <rect x="88" y="118" width="10" height="14" rx="2" fill="#F5C518"
-              transform="rotate(10,93,125)"
-              filter="drop-shadow(0 2px 4px rgba(0,0,0,.5))"/>
-
-        <!-- NECK -->
-        <rect x="44" y="70" width="12" height="18" rx="5" fill="#c8a882"/>
-
-        <!-- HEAD -->
-        <ellipse cx="50" cy="56" rx="24" ry="26" fill="#c8a882"/>
-
-        <!-- Hair - short, dark -->
-        <ellipse cx="50" cy="33" rx="24" ry="13" fill="#2a1500"/>
-        <path d="M26 47 Q22 28 50 28 Q78 28 74 47" fill="#2a1500"/>
-
-        <!-- Ear left -->
-        <ellipse cx="26" cy="58" rx="5" ry="6" fill="#bf9870"/>
-        <!-- Ear right -->
-        <ellipse cx="74" cy="58" rx="5" ry="6" fill="#bf9870"/>
-
-        <!-- Eyes - serious expression -->
-        <ellipse cx="41" cy="54" rx="5.5" ry="6" fill="white"/>
-        <ellipse cx="59" cy="54" rx="5.5" ry="6" fill="white"/>
-        <ellipse cx="42" cy="55" rx="3.5" ry="4.5" fill="#1a0a00"/>
-        <ellipse cx="60" cy="55" rx="3.5" ry="4.5" fill="#1a0a00"/>
-        <ellipse cx="43" cy="53" rx="1.2" ry="1.2" fill="white"/>
-        <ellipse cx="61" cy="53" rx="1.2" ry="1.2" fill="white"/>
-        <!-- Serious eyebrows (furrowed) -->
-        <path d="M35 47 Q41 44 47 47" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <path d="M53 47 Q59 44 65 47" stroke="#2a1000" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <!-- Frown lines -->
-        <line x1="44" y1="46" x2="45" y2="48" stroke="#b08060" stroke-width="1" opacity=".5"/>
-        <line x1="56" y1="46" x2="55" y2="48" stroke="#b08060" stroke-width="1" opacity=".5"/>
-
-        <!-- Nose -->
-        <path d="M47 61 Q50 67 53 61" stroke="#a07050" stroke-width="1.8" fill="none"/>
-
-        <!-- Mouth - closed, whistle in it -->
-        <path d="M42 70 L58 70" stroke="#9a6040" stroke-width="1.8" stroke-linecap="round"/>
-
-        <!-- WHISTLE in mouth -->
-        <!-- Cord -->
-        <path d="M44 68 Q38 60 30 62 Q24 64 26 70" stroke="#000" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <!-- Whistle body -->
-        <rect x="20" y="68" width="22" height="9" rx="4" fill="#C0C0C0"/>
-        <rect x="21" y="69" width="20" height="7" rx="3.5" fill="#E8E8E8"/>
-        <!-- Whistle tip -->
-        <rect x="40" y="70" width="8" height="5" rx="2" fill="#aaa"/>
-        <!-- Whistle hole -->
-        <ellipse cx="29" cy="72" rx="3" ry="2.5" fill="rgba(0,0,0,.2)"/>
-        <!-- Whistle highlight -->
-        <path d="M23 70 Q30 69 38 70" stroke="white" stroke-width="1" opacity=".6" fill="none"/>
-
-        <!-- Earpiece (optional VAR headset) -->
-        <ellipse cx="26" cy="56" rx="4" ry="5" fill="#111" opacity=".8"/>
-        <circle cx="26" cy="58" r="2.5" fill="#333"/>
-        <path d="M22 54 Q18 50 20 44" stroke="#555" stroke-width="1.5" fill="none"/>
-      </svg>
-      <div class="char-glow"></div>
-      <div class="char-shadow"></div>
+    <div class="side-footer">
+      <div class="mood-suggestions-title">PROVA UN MOOD</div>
+      <div class="quick-moods" id="quick-moods"></div>
     </div>
 
-  </div><!-- /stage -->
-
-  <!-- Bottom: progress + press start -->
-  <div id="bottom">
-    <div id="progress-row">
-      <span id="loading-text">Caricamento partita…</span>
-      <span id="progress-pct">0%</span>
+    <div class="side-bottom">
+      <span class="side-bottom-brand">musicAi</span>
+      <span class="side-bottom-meta">Epicode · Full Stack AI 2026</span>
     </div>
-    <div id="progress-track">
-      <div id="progress-fill"></div>
-      <div id="progress-shimmer"></div>
-    </div>
-    <div id="press-start">Premi qualsiasi tasto per iniziare</div>
-  </div>
+  </aside>
 
-</div><!-- /wrapper -->
+
+  <!-- ═══════════ MAIN ═══════════ -->
+  <main class="main">
+
+    <!-- ── VISTA CREA ── -->
+    <section class="view view--create active" id="view-create">
+
+      <div class="hero">
+        <div class="hero-eyebrow">// MOOD DJ · POWERED BY AI</div>
+        <h1 class="hero-title">Che <span class="accent">mood</span> vuoi ascoltare?</h1>
+        <p class="hero-desc">Descrivi come ti senti o cosa stai facendo. L'AI costruirà la playlist perfetta per te.</p>
+      </div>
+
+      <!-- INPUT (stile chat AI) -->
+      <div class="prompt-box">
+        <textarea id="mood-input" class="prompt-input" rows="1"
+          placeholder="Es. giornata pesante, voglio staccare con qualcosa di rilassante…"></textarea>
+        <div class="prompt-actions">
+          <button class="surprise-btn" id="surprise-btn" title="Sorprendimi con un mood casuale">
+            <svg viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><circle cx="6" cy="6" r="1.3" fill="currentColor"/><circle cx="14" cy="6" r="1.3" fill="currentColor"/><circle cx="6" cy="14" r="1.3" fill="currentColor"/><circle cx="14" cy="14" r="1.3" fill="currentColor"/><circle cx="10" cy="10" r="1.3" fill="currentColor"/></svg>
+            Sorprendimi
+          </button>
+          <button class="generate-btn" id="generate-btn">
+            <span class="gen-label">Genera playlist</span>
+            <svg viewBox="0 0 20 20" fill="none"><path d="M5 10h10M11 6l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- STATO / OUTPUT -->
+      <div class="output" id="output">
+
+        <!-- placeholder iniziale -->
+        <div class="output-empty" id="output-empty">
+          <div class="empty-icon">
+            <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="24" r="20" stroke="var(--blood)" stroke-width="1" opacity="0.25"/><path d="M18 18v12a3 3 0 11-2-2.8V20l10-2v8a3 3 0 11-2-2.8V16l-6 1.2z" fill="var(--blood)" opacity="0.5"/></svg>
+          </div>
+          <p>La tua playlist apparirà qui</p>
+        </div>
+
+        <!-- loading -->
+        <div class="output-loading" id="output-loading">
+          <div class="eq-bars"><span></span><span></span><span></span><span></span><span></span></div>
+          <p id="loading-text">L'AI sta selezionando i brani…</p>
+        </div>
+
+        <!-- risultato -->
+        <div class="playlist-result" id="playlist-result"></div>
+
+      </div>
+    </section>
+
+
+    <!-- ── VISTA LIBRERIA ── -->
+    <section class="view view--library" id="view-library">
+      <div class="lib-header">
+        <div>
+          <div class="hero-eyebrow">// LA TUA LIBRERIA</div>
+          <h1 class="hero-title">Playlist <span class="accent">salvate</span></h1>
+        </div>
+        <button class="clear-btn" id="clear-all-btn" style="display:none">Svuota tutto</button>
+      </div>
+
+      <div class="library-grid" id="library-grid"></div>
+
+      <div class="library-empty" id="library-empty">
+        <div class="empty-icon">
+          <svg viewBox="0 0 48 48" fill="none"><rect x="10" y="12" width="8" height="24" rx="2" stroke="var(--blood)" stroke-width="1.2" opacity="0.4"/><rect x="22" y="12" width="8" height="24" rx="2" stroke="var(--blood)" stroke-width="1.2" opacity="0.4"/><path d="M34 14l4 22" stroke="var(--blood)" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/></svg>
+        </div>
+        <p>Nessuna playlist salvata</p>
+        <span>Genera un mood e salvalo per ritrovarlo qui</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"></div>
 
 <script src="assets/js/script.js"></script>
+<script src="assets/js/server.js"></script>
 </body>
 </html>
