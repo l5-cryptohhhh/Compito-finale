@@ -1,4 +1,4 @@
-import { ALPHABET } from '../data/questions.js'
+import { ALPHABET } from '../js/questions.js'
 
 /**
  * LetterCircle

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import Confetti from '../components/Confetti.jsx'
-import { playFinish } from '../utils/sound.js'
+import Confetti from '../jsx/Confetti.jsx'
+import { playFinish } from '../js/buildRound.js'
 
 /**
  * FinalScreen

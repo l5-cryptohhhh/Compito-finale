@@ -1,4 +1,4 @@
-import { unlockAudio } from '../utils/sound.js'
+import { unlockAudio } from '../js/sound.js'
 
 /**
  * HomeScreen

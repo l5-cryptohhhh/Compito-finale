@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import HomeScreen from './pages/HomeScreen.jsx'
-import GameBoard from './pages/GameBoard.jsx'
-import FinalScreen from './pages/FinalScreen.jsx'
+import HomeScreen from './HomeScreen.jsx'
+import GameBoard from './GameBoard.jsx'
+import FinalScreen from './FinalScreen.jsx'
 
 /**
  * App

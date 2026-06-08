@@ -1,12 +1,12 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from 'react'
-import LetterCircle from '../components/LetterCircle.jsx'
-import Timer from '../components/Timer.jsx'
-import QuestionCard from '../components/QuestionCard.jsx'
-import ScoreBoard from '../components/ScoreBoard.jsx'
-import { buildRound } from '../utils/buildRound.js'
-import { isAnswerCorrect } from '../utils/answers.js'
-import { useCountdown } from '../hooks/useCountdown.js'
-import { playCorrect, playWrong } from '../utils/sound.js'
+import LetterCircle from './LetterCircle.jsx'
+import Timer from './Timer.jsx'
+import QuestionCard from './QuestionCard.jsx'
+import ScoreBoard from './ScoreBoard.jsx'
+import { buildRound } from '../js/buildRound.js'
+import { isAnswerCorrect } from '../js/answers.js'
+import { useCountdown } from '../js/useCountdown.js'
+import { playCorrect, playWrong } from '../js/sound.js'
 
 const QUESTION_SECONDS = 15
 const FEEDBACK_MS = 1100 // pausa per mostrare l'esito prima di avanzare

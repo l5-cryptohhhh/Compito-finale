@@ -1,4 +1,4 @@
-import { QUESTIONS, ALPHABET } from '../data/questions.js'
+import { QUESTIONS, ALPHABET } from '../js/questions.js' 
 
 /**
  * Costruisce una partita: una domanda casuale per ogni lettera A-Z,
