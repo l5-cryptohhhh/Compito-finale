@@ -1,0 +1,18 @@
+.wrap { min-height: 100vh; padding: 40px 24px 60px; max-width: 1000px; margin: 0 auto; position: relative; }
+.glow { position: fixed; top: -150px; right: -100px; width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(45,212,191,0.2), transparent 60%); filter: blur(70px); pointer-events: none; }
+.head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 32px; gap: 16px; position: relative; z-index: 1; }
+.kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.62rem; letter-spacing: 3px; color: var(--teal); margin-bottom: 8px; }
+.head h1 { font-size: 1.6rem; font-weight: 800; line-height: 1.2; }
+.sub { color: #8a8a96; font-size: 0.82rem; margin-top: 8px; }
+.logout { padding: 10px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #8a8a96; cursor: pointer; font-size: 0.78rem; white-space: nowrap; }
+.logout:hover { color: var(--blood); border-color: var(--blood); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; position: relative; z-index: 1; }
+.teamCard { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 24px 16px;
+  background: rgba(20,20,30,0.6); backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; cursor: pointer; transition: all 0.18s; }
+.teamCard:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.2); box-shadow: 0 16px 40px rgba(0,0,0,0.4); }
+.teamName { font-weight: 700; font-size: 0.95rem; text-align: center; margin-top: 6px; }
+.teamCity { color: #8a8a96; font-size: 0.72rem; }
+.colors { display: flex; gap: 6px; margin-top: 8px; }
+.colors span { width: 16px; height: 16px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.2); }

@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #07070b;
+  --bg-2: #0e0e16;
+  --text: #f0f0f2;
+  --blood: #c8102e;
+  --blue: #2b6fff;
+  --violet: #7b3ff2;
+  --teal: #2dd4bf;
+  --gold: #f5c518;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Sora', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+button { font-family: inherit; }
+input { font-family: inherit; }

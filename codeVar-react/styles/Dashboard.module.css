@@ -1,0 +1,35 @@
+.wrap { min-height: 100vh; position: relative; }
+.glow { position: fixed; top: -180px; left: 20%; width: 600px; height: 500px;
+  background: radial-gradient(circle, rgba(43,111,255,0.22), transparent 60%); filter: blur(80px); pointer-events: none; }
+.topbar { display: flex; justify-content: space-between; align-items: center; padding: 18px 28px; border-bottom: 1px solid rgba(255,255,255,0.06); position: relative; z-index: 1; }
+.brand { display: flex; flex-direction: column; line-height: 1; }
+.code { font-family: 'JetBrains Mono', monospace; font-size: 0.58rem; letter-spacing: 3px; color: #5c5c66; }
+.var { font-size: 1.4rem; font-weight: 800; letter-spacing: 2px; }
+.v { color: var(--blood); }
+.logout { padding: 9px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12); background: transparent; color: #8a8a96; cursor: pointer; font-size: 0.78rem; }
+.logout:hover { color: var(--blood); border-color: var(--blood); }
+.content { max-width: 720px; margin: 0 auto; padding: 32px 24px 60px; position: relative; z-index: 1; display: flex; flex-direction: column; gap: 20px; }
+.profile { padding: 24px; background: rgba(20,20,30,0.6); backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; }
+.profileTop { display: flex; align-items: center; gap: 18px; }
+.username { font-size: 1.5rem; font-weight: 800; }
+.teamName { color: #8a8a96; font-size: 0.85rem; margin-top: 2px; }
+.levelBadge { display: inline-block; margin-top: 8px; padding: 4px 14px; border-radius: 20px;
+  background: linear-gradient(135deg, var(--violet), var(--blue)); font-size: 0.72rem; font-weight: 700; letter-spacing: 1px; }
+.progressWrap { margin-top: 20px; }
+.progressLabel { display: flex; justify-content: space-between; font-size: 0.72rem; color: #8a8a96; margin-bottom: 8px; }
+.progressBar { height: 8px; background: rgba(0,0,0,0.4); border-radius: 8px; overflow: hidden; }
+.progressFill { height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue)); border-radius: 8px; transition: width 0.5s; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.statCard { display: flex; flex-direction: column; gap: 4px; padding: 18px; background: rgba(20,20,30,0.6); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; text-align: center; }
+.statCard span { font-size: 1.7rem; font-weight: 800; color: var(--gold); }
+.statCard small { font-size: 0.56rem; letter-spacing: 1.5px; color: #6a6a76; text-transform: uppercase; }
+.menu { display: flex; flex-direction: column; gap: 10px; }
+.menuPrimary { display: flex; align-items: center; gap: 14px; padding: 18px 22px; border: none; border-radius: 16px;
+  background: linear-gradient(135deg, var(--blood), #e0344f); color: #fff; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.15s; }
+.menuPrimary:hover { transform: translateY(-2px); }
+.menuArrow { margin-left: auto; }
+.menuItem { display: flex; align-items: center; gap: 14px; padding: 16px 22px; border: 1px solid rgba(255,255,255,0.1); border-radius: 16px;
+  background: rgba(20,20,30,0.6); color: var(--text); font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.15s; }
+.menuItem:hover { border-color: rgba(255,255,255,0.25); }
+.menuIcon { font-size: 1.2rem; }
+@media (max-width: 560px) { .stats { grid-template-columns: repeat(2,1fr); } }
