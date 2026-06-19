@@ -441,6 +441,8 @@ const COLORS = {
 
 function buildStickman(team, role) {
   const group = new THREE.Group();
+  // YXZ so yaw (facing) applies first, then X = forward lean in the facing frame.
+  group.rotation.order = 'YXZ';
   const jersey = team === 'attack' ? COLORS.attack : role === 'goalkeeper' ? COLORS.goalkeeper : COLORS.defense;
   const jMat   = new THREE.MeshPhongMaterial({ color: jersey, shininess: 40 });
   const sMat   = new THREE.MeshPhongMaterial({ color: COLORS.skin, shininess: 20 });
@@ -525,27 +527,53 @@ function buildStickman(team, role) {
 }
 
 // ── STICKMAN ANIMATION ────────────────────────────────────────────────────────
-function animateStickman(sm, frame, intensity = 1.0) {
-  const t = frame * 0.17;
-  const s = intensity;
+// speed01 = normalized gait speed (0 idle → ~1.3 full sprint). phase = per-player
+// offset so the squad isn't lock-stepped. Cadence + stride amplitude both scale
+// with speed (slow jog = short shuffling steps, sprint = long pumping strides).
+function animateStickman(sm, frame, speed01 = 0, phase = 0) {
+  const spd  = Math.min(speed01, 1.3);
+  const freq = 0.12 + spd * 0.13;          // faster movement → quicker cadence
+  const t    = frame * freq + phase;
+  const amp  = 0.22 + spd * 0.95;          // small idle sway → long sprint stride
 
-  const hipSwing  = Math.sin(t) * 0.65 * s;
-  const kneeBend  = Math.max(0, Math.sin(t - 0.35)) * 0.85 * s;
-  const armSwing  = Math.sin(t) * 0.42 * s;
-  const forearmA  = Math.max(0, Math.sin(t + 0.5)) * 0.5 * s;
+  // Contralateral gait: left limbs vs right limbs half a cycle apart.
+  const hipL = Math.sin(t);
+  const hipR = Math.sin(t + Math.PI);
 
-  sm.leftHip.rotation.x   =  hipSwing;
-  sm.rightHip.rotation.x  = -hipSwing;
-  sm.leftKnee.rotation.x  =  kneeBend;
-  sm.rightKnee.rotation.x =  Math.max(0, Math.sin(t + Math.PI - 0.35)) * 0.85 * s;
+  // Hips drive the leg swing.
+  sm.leftHip.rotation.x  = hipL * 0.6 * amp;
+  sm.rightHip.rotation.x = hipR * 0.6 * amp;
 
-  sm.leftShoulder.rotation.x  = -armSwing;
-  sm.rightShoulder.rotation.x =  armSwing;
-  sm.leftForearm.rotation.x   = -forearmA;
-  sm.rightForearm.rotation.x  =  forearmA;
+  // Knees flex most as the trailing leg folds up under the hip (phase-lagged),
+  // never hyperextend (clamped ≥ 0).
+  sm.leftKnee.rotation.x  = Math.max(0, Math.sin(t + 1.1))          * 1.2 * amp;
+  sm.rightKnee.rotation.x = Math.max(0, Math.sin(t + Math.PI + 1.1)) * 1.2 * amp;
 
-  // Slight body bob
-  sm.group.position.y = Math.abs(Math.sin(t * 2)) * 0.045 * s;
+  // Ankles plantarflex at toe-off (push behind the body).
+  sm.leftAnkle.rotation.x  = Math.max(0, Math.sin(t - 0.6))          * 0.55 * amp;
+  sm.rightAnkle.rotation.x = Math.max(0, Math.sin(t + Math.PI - 0.6)) * 0.55 * amp;
+
+  // Arms counter-swing the legs (opposite same-side leg) and stay bent at the
+  // elbow — bend deepens on the forward drive.
+  sm.leftShoulder.rotation.x  = -hipL * 0.55 * amp;
+  sm.rightShoulder.rotation.x = -hipR * 0.55 * amp;
+  sm.leftShoulder.rotation.z  =  0.12;     // slight out-swing, clears the torso
+  sm.rightShoulder.rotation.z = -0.12;
+  sm.leftForearm.rotation.x   = -(0.5 + Math.max(0, Math.sin(t + 0.6))          * 0.55) * (0.4 + amp);
+  sm.rightForearm.rotation.x  = -(0.5 + Math.max(0, Math.sin(t + Math.PI + 0.6)) * 0.55) * (0.4 + amp);
+
+  // Vertical bob: two foot-plants per stride → twice the leg frequency.
+  sm.group.position.y = Math.abs(Math.sin(t)) * 0.07 * amp;
+
+  // Forward lean target (sprinters drive their chest over the lead foot).
+  // Smoothed by the caller into group.rotation.x within the facing frame.
+  sm._leanTarget = spd * 0.26;
+}
+
+// Shortest-arc angle lerp (avoids spin-around when crossing ±π).
+function lerpAngle(cur, target, a) {
+  const d = Math.atan2(Math.sin(target - cur), Math.cos(target - cur));
+  return cur + d * a;
 }
 
 // ── PLAYER DYNAMIC POSITION ───────────────────────────────────────────────────
@@ -634,19 +662,35 @@ function update3D(sc) {
 
   // Update stickmen positions + animation
   R.stickmen.forEach(({ sm, p }) => {
-    const pos = getPlayerPos(p, sc, frame);
+    const pos  = getPlayerPos(p, sc, frame);
+    const prev = getPlayerPos(p, sc, Math.max(0, frame - 1));
+    const vx = pos.x - prev.x, vz = pos.z - prev.z;
+    const speed = Math.hypot(vx, vz);            // pitch units / frame
+
     sm.group.position.x = pos.x;
     sm.group.position.z = pos.z;
 
-    // Running intensity: sprinters animate hard, the holding last defender less.
-    const moving   = (p.app || p.appz || p.post || p.postz);
-    const intensity = p.isLast ? 0.55 : moving ? 1.15 : 0.7;
-    animateStickman(sm, frame, intensity);
+    // Gait speed straight from real velocity → still players idle, sprinters pump.
+    // ~0.11 u/f ≈ full sprint. Per-player phase keeps the squad out of lock-step.
+    if (p._phase === undefined) p._phase = Math.random() * Math.PI * 2;
+    const gaitSpeed = Math.min(speed / 0.11, 1.3);
+    animateStickman(sm, frame, gaitSpeed, p._phase);
 
-    // Defenders face toward attacker (look left)
+    // Facing: attackers turn toward their run; defenders hold toward the play
+    // (the incoming attack) with a subtle scanning sway.
+    let yaw;
     if (p.team === 'defense') {
-      sm.group.rotation.y = Math.PI + Math.sin(frame * 0.015) * 0.15;
+      yaw = Math.PI + Math.sin(frame * 0.02 + p._phase) * 0.12;
+    } else if (speed > 0.004) {
+      yaw = Math.atan2(-vz, vx);                 // local +x faces (vx, vz)
+    } else {
+      yaw = sm.group.rotation.y;                 // hold last heading when stationary
     }
+    sm.group.rotation.y = lerpAngle(sm.group.rotation.y, yaw, 0.18);
+
+    // Smooth the forward lean (defenders backpedal → lean back, hence halved/neg).
+    const leanTarget = (sm._leanTarget || 0) * (p.team === 'defense' ? -0.4 : 1);
+    sm.group.rotation.x += (leanTarget - sm.group.rotation.x) * 0.15;
   });
 
   // Update ball
@@ -655,22 +699,36 @@ function update3D(sc) {
   const passerPos   = getPlayerPos(passer, sc, frame);
   const receiverPos = getPlayerPos(receiver, sc, frame);
 
+  const shadow  = R.ball.children.find(c => c.name === 'shadow');
+  const patches = R.ball.children.find(c => c.name === 'patches');
+  const prevX = R.ball.position.x, prevZ = R.ball.position.z;
+  let by;
   if (frame < G.passFrame) {
     const bounce = Math.abs(Math.sin(frame * 0.25)) * 0.18;
-    R.ball.position.set(passerPos.x, 0.38 + bounce, passerPos.z);
-    R.ball.children.find(c => c.name === 'shadow').position.set(0, -(0.37 + bounce), 0);
+    by = 0.38 + bounce;
+    R.ball.position.set(passerPos.x, by, passerPos.z);
   } else {
     const t    = Math.min((frame - G.passFrame) / (G.totalFrames * 0.58), 1);
     const ease = 1 - Math.pow(1 - t, 2.4);
     const arc  = Math.sin(Math.PI * t) * 5.5;
     const bx   = passerPos.x + (receiverPos.x - passerPos.x) * ease;
     const bz   = passerPos.z + (receiverPos.z - passerPos.z) * ease;
-    const by   = 0.38 + arc;
+    by = 0.38 + arc;
     R.ball.position.set(bx, by, bz);
-    R.ball.children.find(c => c.name === 'shadow').position.set(0, -(by - 0.01), 0);
   }
-  R.ball.children.find(c => c.name === 'patches').rotation.z += 0.04;
-  R.ball.children.find(c => c.name === 'patches').rotation.x += 0.02;
+  // Shadow stays glued to the ground; grows + fades as the ball climbs (penumbra).
+  const h = Math.max(0, by - 0.38);
+  shadow.position.set(0, -(by - 0.01), 0);
+  shadow.scale.setScalar(1 + h * 0.12);
+  shadow.material.opacity = Math.max(0.06, 0.3 - h * 0.03);
+
+  // Spin proportional to real travel: fast flight → fast roll, plus a touch of
+  // axis wobble so it tumbles rather than spinning on one clean axis.
+  const travel = Math.hypot(R.ball.position.x - prevX, R.ball.position.z - prevZ);
+  const spin = 0.04 + travel * 0.9;
+  patches.rotation.z += spin;
+  patches.rotation.x += spin * 0.5;
+  patches.rotation.y += 0.01;
 
   // Offside line
   const lastDef = sc.players.find(p => p.isLast);
