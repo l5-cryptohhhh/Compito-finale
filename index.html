@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#07111f">
+  <title>codeVar – Il Gioco del VAR</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- AUTH SCREEN -->
+  <div id="screen-auth" class="screen active">
+    <div class="auth-bg"></div>
+    <div class="auth-overlay"></div>
+    <div class="auth-box">
+      <div class="var-logo">
+        <div class="var-text">codeVar</div>
+        <div class="var-sub">Il Gioco del Video Assistant Referee</div>
+      </div>
+      <div class="auth-tabs">
+        <button class="tab-btn active" id="tab-login-btn">Accedi</button>
+        <button class="tab-btn" id="tab-reg-btn">Registrati</button>
+      </div>
+      <div id="form-login-wrap" class="form-wrap active">
+        <form id="form-login" autocomplete="off">
+          <div class="field"><input type="text" id="login-user" placeholder="Username" required></div>
+          <div class="field"><input type="password" id="login-pass" placeholder="Password" required></div>
+          <div class="field-err" id="login-error"></div>
+          <button type="submit" class="btn-primary">ACCEDI</button>
+        </form>
+      </div>
+      <div id="form-reg-wrap" class="form-wrap">
+        <form id="form-register" autocomplete="off">
+          <div class="field"><input type="text" id="reg-user" placeholder="Username" required></div>
+          <div class="field"><input type="email" id="reg-email" placeholder="Email" required></div>
+          <div class="field"><input type="password" id="reg-pass" placeholder="Password" required></div>
+          <div class="field-err" id="reg-error"></div>
+          <button type="submit" class="btn-primary">REGISTRATI</button>
+        </form>
+      </div>
+      <div class="guest-sep">oppure</div>
+      <button class="btn-guest" id="btn-guest">Gioca come Ospite →</button>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div id="screen-game" class="screen">
+    <header class="game-header">
+      <div class="hdr-var">codeVar</div>
+      <div class="hdr-mid">
+        <div class="hdr-prog-text">Azione <span id="q-num">1</span> / 10</div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      </div>
+      <div class="hdr-score">⚽ <span id="score">0</span></div>
+    </header>
+
+    <div class="scenario-banner" id="scenario-title">Azione 1</div>
+
+    <div class="canvas-container">
+      <canvas id="game-canvas"></canvas>
+      <div class="frame-badge" id="frame-badge">Frame 0</div>
+    </div>
+
+    <div class="controls-row">
+      <button class="ctrl-btn" id="btn-rew" title="−5 frame">⏮</button>
+      <button class="ctrl-btn play-btn" id="btn-play">⏸</button>
+      <button class="ctrl-btn" id="btn-fwd" title="+5 frame">⏭</button>
+      <button class="ctrl-btn speed-btn" id="btn-speed">🐢 0.5x</button>
+    </div>
+
+    <div class="verdict-row">
+      <button class="verdict-btn off-btn" id="btn-offside">🚩 FUORIGIOCO</button>
+      <button class="verdict-btn on-btn" id="btn-onside">✅ NON IN FUORIGIOCO</button>
+    </div>
+
+    <div class="feedback-panel" id="feedback-panel" style="display:none">
+      <div class="fb-result" id="fb-result"></div>
+      <div class="fb-exp" id="fb-exp"></div>
+      <button class="btn-next-q" id="btn-next-q">Prossima azione →</button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-results" class="screen">
+    <canvas id="results-canvas"></canvas>
+    <div class="results-overlay">
+      <div class="results-box">
+        <div class="res-var">codeVar</div>
+        <div class="res-title">Partita Finita!</div>
+        <div class="res-score"><span id="final-score">0</span><span class="out-of">/10</span></div>
+        <div class="res-rank" id="res-rank"></div>
+        <div class="wrong-section" id="wrong-section"></div>
+        <button class="btn-primary" id="btn-restart">⚽ GIOCA ANCORA</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="assets/js/script.js"></script>
+</body>
+</html>
