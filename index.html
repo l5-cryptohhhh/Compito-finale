@@ -7,39 +7,68 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="theme-color" content="#07111f">
-  <title>codeVar – Il Gioco del VAR</title>
+  <title>codeVar – Carriera Arbitrale</title>
   <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
 
-  <!-- AUTH SCREEN -->
+  <!-- AUTH SCREEN (invariata) -->
   <div id="screen-auth" class="screen active">
     <div class="auth-bg"></div>
     <div class="auth-overlay"></div>
     <div class="auth-box">
       <div class="var-logo">
         <div class="var-text">codeVar</div>
-        <div class="var-sub">Il Gioco del Video Assistant Referee</div>
+        <div class="var-sub">Carriera del Video Assistant Referee</div>
       </div>
       <div class="auth-tabs">
         <button class="tab-btn active" id="tab-login-btn">Accedi</button>
         <button class="tab-btn" id="tab-reg-btn">Registrati</button>
       </div>
       <div id="form-login-wrap" class="form-wrap active">
-        <form id="form-login" autocomplete="off">
-          <div class="field"><input type="text" id="login-user" placeholder="Username" required></div>
-          <div class="field"><input type="password" id="login-pass" placeholder="Password" required></div>
-          <div class="field-err" id="login-error"></div>
-          <button type="submit" class="btn-primary">ACCEDI</button>
+        <form id="form-login" novalidate>
+          <div class="field">
+            <label for="login-user">Username</label>
+            <input type="text" id="login-user" autocomplete="username" placeholder="Il tuo username" required>
+          </div>
+          <div class="field">
+            <label for="login-pass">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="login-pass" autocomplete="current-password" placeholder="La tua password" required>
+              <button type="button" class="pass-toggle" data-target="login-pass" aria-label="Mostra password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="field-err" id="login-error" role="alert"></div>
+          <button type="submit" class="btn-primary" id="btn-login-submit">ACCEDI</button>
         </form>
       </div>
       <div id="form-reg-wrap" class="form-wrap">
-        <form id="form-register" autocomplete="off">
-          <div class="field"><input type="text" id="reg-user" placeholder="Username" required></div>
-          <div class="field"><input type="email" id="reg-email" placeholder="Email" required></div>
-          <div class="field"><input type="password" id="reg-pass" placeholder="Password" required></div>
-          <div class="field-err" id="reg-error"></div>
-          <button type="submit" class="btn-primary">REGISTRATI</button>
+        <form id="form-register" novalidate>
+          <div class="field">
+            <label for="reg-user">Username</label>
+            <input type="text" id="reg-user" autocomplete="username" placeholder="Minimo 2 caratteri" required minlength="2">
+          </div>
+          <div class="field">
+            <label for="reg-email">Email</label>
+            <input type="email" id="reg-email" autocomplete="email" placeholder="nome@esempio.it" required>
+          </div>
+          <div class="field">
+            <label for="reg-pass">Password</label>
+            <div class="pass-wrap">
+              <input type="password" id="reg-pass" autocomplete="new-password" placeholder="Minimo 6 caratteri" required minlength="6">
+              <button type="button" class="pass-toggle" data-target="reg-pass" aria-label="Mostra password">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="reg-pass2">Conferma password</label>
+            <input type="password" id="reg-pass2" autocomplete="new-password" placeholder="Ripeti la password" required>
+          </div>
+          <div class="field-err" id="reg-error" role="alert"></div>
+          <button type="submit" class="btn-primary" id="btn-reg-submit">REGISTRATI</button>
         </form>
       </div>
       <div class="guest-sep">oppure</div>
@@ -47,44 +76,118 @@
     </div>
   </div>
 
-  <!-- GAME SCREEN -->
+  <!-- CAREER SCREEN: la mappa degli 8 allenatori -->
+  <div id="screen-career" class="screen">
+    <header class="career-header">
+      <div class="hdr-var">codeVar</div>
+      <div class="career-hdr-mid">
+        <div class="career-progress-text" id="career-progress">0 / 8 allenatori battuti</div>
+        <div class="progress-bar"><div class="progress-fill" id="career-fill"></div></div>
+      </div>
+      <div class="career-user" id="career-user"></div>
+      <button class="btn-ghost" id="btn-logout">Esci</button>
+    </header>
+
+    <div class="career-scroll">
+      <div class="career-title">LA SCALATA ARBITRALE</div>
+      <div class="career-sub">Batti gli 8 allenatori: dirigi le loro partite e prendi le decisioni giuste al VAR.</div>
+      <div class="career-grid" id="career-grid"></div>
+
+      <button class="btn-classic" id="btn-classic">🎬 Modalità Classica — le 10 azioni originali</button>
+    </div>
+
+    <!-- Modal intro allenatore -->
+    <div class="modal" id="trainer-intro">
+      <div class="modal-box">
+        <div class="ti-portrait tc-portrait" id="ti-portrait"></div>
+        <div class="ti-name" id="ti-name"></div>
+        <div class="ti-team" id="ti-team"></div>
+        <div class="ti-stadium" id="ti-stadium"></div>
+        <div class="ti-taunt" id="ti-taunt"></div>
+        <div class="ti-meta" id="ti-meta"></div>
+        <div class="modal-btns">
+          <button class="btn-ghost" id="btn-ti-close">Indietro</button>
+          <button class="btn-primary btn-inline" id="btn-ti-start">⚽ FISCHIA L'INIZIO</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN: fase live + review VAR (carriera e classica) -->
   <div id="screen-game" class="screen">
     <header class="game-header">
+      <button class="btn-back" id="btn-abort" title="Torna agli allenatori">←</button>
       <div class="hdr-var">codeVar</div>
-      <div class="hdr-mid">
+
+      <div class="hdr-mid" id="hdr-classic">
         <div class="hdr-prog-text">Azione <span id="q-num">1</span> / 10</div>
         <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
       </div>
+
+      <div class="hdr-mid match-hud" id="match-hud" style="display:none">
+        <span class="mh-team" id="mh-home"></span>
+        <span class="mh-score" id="mh-score">0 – 0</span>
+        <span class="mh-team" id="mh-away"></span>
+        <span class="mh-minute" id="mh-minute">0′</span>
+        <span class="mh-rep" id="mh-rep" title="Decisioni corrette / necessarie"></span>
+      </div>
+
       <div class="hdr-score">⚽ <span id="score">0</span></div>
     </header>
 
-    <div class="scenario-banner" id="scenario-title">Azione 1</div>
+    <div class="scenario-banner" id="scenario-title"><span id="scenario-banner">—</span></div>
 
     <div class="canvas-container">
       <canvas id="game-canvas"></canvas>
       <div class="frame-badge" id="frame-badge">Frame 0</div>
+      <div class="cam-row" id="cam-row" style="display:none">
+        <span class="cam-label">REGIA</span>
+        <button class="cam-btn active" id="btn-cam-a">TV</button>
+        <button class="cam-btn" id="btn-cam-b">LINEA</button>
+        <button class="cam-btn" id="btn-cam-c">PORTA</button>
+      </div>
+      <div class="var-banner" id="var-banner">
+        <div class="vb-inner">📺 CHECK VAR IN CORSO<span class="vb-dots">…</span></div>
+      </div>
+      <div class="commentary" id="commentary"></div>
     </div>
 
-    <div class="controls-row">
+    <div class="controls-row" id="controls-row">
       <button class="ctrl-btn" id="btn-rew" title="−5 frame">⏮</button>
       <button class="ctrl-btn play-btn" id="btn-play">⏸</button>
       <button class="ctrl-btn" id="btn-fwd" title="+5 frame">⏭</button>
       <button class="ctrl-btn speed-btn" id="btn-speed">🐢 0.5x</button>
     </div>
 
-    <div class="verdict-row">
-      <button class="verdict-btn off-btn" id="btn-offside">🚩 FUORIGIOCO</button>
-      <button class="verdict-btn on-btn" id="btn-onside">✅ NON IN FUORIGIOCO</button>
+    <div class="verdict-row" id="verdict-row">
+      <button class="verdict-btn off-btn" id="btn-verdict-a">🚩 FUORIGIOCO</button>
+      <button class="verdict-btn on-btn" id="btn-verdict-b">✅ REGOLARE</button>
     </div>
 
     <div class="feedback-panel" id="feedback-panel" style="display:none">
       <div class="fb-result" id="fb-result"></div>
       <div class="fb-exp" id="fb-exp"></div>
+      <div class="fb-conseq" id="fb-conseq"></div>
       <button class="btn-next-q" id="btn-next-q">Prossima azione →</button>
+    </div>
+
+    <!-- Overlay fine partita (carriera) -->
+    <div class="modal" id="match-end">
+      <div class="modal-box">
+        <div class="me-title" id="me-title"></div>
+        <div class="me-sub" id="me-sub"></div>
+        <div class="me-rep" id="me-rep"></div>
+        <div class="ti-taunt" id="me-quote"></div>
+        <div class="modal-btns modal-btns-col">
+          <button class="btn-primary btn-inline" id="btn-me-next">➡️ Sfida il prossimo allenatore</button>
+          <button class="btn-ghost" id="btn-me-retry">🔄 Rigioca la partita</button>
+          <button class="btn-ghost" id="btn-me-map">🗺️ Torna agli allenatori</button>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- RESULTS SCREEN -->
+  <!-- RESULTS SCREEN (modalità classica) -->
   <div id="screen-results" class="screen">
     <canvas id="results-canvas"></canvas>
     <div class="results-overlay">
@@ -95,6 +198,7 @@
         <div class="res-rank" id="res-rank"></div>
         <div class="wrong-section" id="wrong-section"></div>
         <button class="btn-primary" id="btn-restart">⚽ GIOCA ANCORA</button>
+        <button class="btn-guest" id="btn-res-map" style="margin-top:10px">🗺️ Torna agli allenatori</button>
       </div>
     </div>
   </div>
